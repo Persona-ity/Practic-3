@@ -268,3 +268,64 @@ Vue.component('col4', {
        
    },
 })
+
+Vue.component('newcard', {
+   template: `
+   <section>
+   <div id="openModal" class="modal">
+   <div class="modal-dialog">
+       <div class="modal-content">
+       <div class="modal-header">
+           <h3 class="modal-title">Заполните карточку</h3>
+       </div>
+       <div class="modal-body">    
+       <form class="addform" @submit.prevent="onSubmit">
+           <p>
+               <label for="intitle">Заголовок</label>
+               <input id="intitle" required v-model="title" maxlength="30" type="text" placeholder="Заголовок">
+           </p>
+           <label for="indescription">Описание</label>
+           <textarea required id="indescription" rows="5" columns="10" v-model="description" maxlength="60"> </textarea>
+           <label for="indeadline">Дедлайн</label>
+           <input required type="date" required placeholder="дд.мм.гггг" id="indeadline" v-model="deadline">
+           <button type="submit">Добавить карточку</button>
+       </form>
+       
+       </div>
+       </div>
+   </div>
+   </div>
+   </section>
+   `,
+   data() {
+       return {
+           title: null,
+           description: null,
+           date: null,
+           deadline: null,
+       }
+   },
+   methods: {
+       onSubmit() {
+           let card = {
+               title: this.title,
+               description: this.description,
+               date: new Date().toLocaleDateString().split(".").reverse().join("-"),
+               deadline: this.deadline,
+               reason: null,
+               transfer: false,
+               edit: null,
+               editB: false,
+               comdate: null,
+               current: true,
+
+           }
+           eventBus.$emit('addColumn1', card)
+           this.title = null
+           this.description = null
+           this.date = null
+           this.deadline = null
+           console.log(card)
+       }
+   }
+})
