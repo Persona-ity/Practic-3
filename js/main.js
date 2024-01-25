@@ -164,3 +164,72 @@ Vue.component('col2', {
        }
    }
 })
+
+Vue.component('col3', {
+   template: `
+       <div class="col"> 
+           <h2>Тестирование</h2>
+           <li class="cards"  v-for="card in column3" >
+               <a @click="card.editB = true">Редактировать</a> <br>
+               <p class="card-title">{{card.title}}</p>
+               <ul>
+                   <li class="tasks">Описание: {{card.description}}</li>
+                   <li class="tasks">Дата создания:
+                   {{ card.date }}</li>
+                   <li class="tasks">Дедлайн: {{card.deadline}}</li>
+                   <li class="tasks" v-if="card.reason != null">Причина переноса: {{ card.reason }}</li>
+                   <li class="tasks" v-if="card.edit != null">Последнее изменение: {{ card.edit}}</li>
+                   <li class="tasks" v-if="card.editB">
+                       <form @submit.prevent="updateTask(card)">
+                           <p>Новый заголовок: 
+                               <input type="text" v-model="card.title" maxlength="30" placeholder="Заголовок">
+                           </p>
+                           <p>Новое описание: 
+                               <textarea v-model="card.description" cols="20" rows="5"></textarea>
+                           </p>
+                           <p>
+                               <input type="submit" value="Редактировать">
+                           </p>
+                       </form>
+                   </li>
+                   <li class="tasks" v-if="card.transfer">
+                       <form @submit.prevent="lastcol(card)">
+                           <p>Причина переноса:
+                               <input type="text" v-model="card.reason">
+                           </p>
+                           <p>
+                               <input type="submit" value="OK">
+                           </p>
+                       </form>
+                   </li>
+               </ul>
+               <a @click="card.transfer = true">Последняя колонка</a>  | <a @click="nextcol(card)">Следующая колонка</a>
+           </div>
+       </div>
+   `,
+   props: {
+       column3: {
+           type: Array,
+       },
+       card: {
+           type: Object
+       }
+   },
+   methods: {
+       nextcol(card) {
+           this.column3.splice(this.column3.indexOf(card), 1)
+           eventBus.$emit('addColumn4', card)
+       },
+       lastcol(card) {
+           card.transfer = false
+           this.column3.splice(this.column3.indexOf(card), 1)
+           eventBus.$emit('addColumn2', card)
+       },
+       updateTask(card){
+           card.edit = new Date().toLocaleString()
+           card.editB = false
+           this.column3.push(card)
+           this.column3.splice(this.column3.indexOf(card), 1)
+       }
+   }
+})
