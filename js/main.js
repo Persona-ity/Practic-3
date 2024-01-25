@@ -110,3 +110,57 @@ Vue.component('col1', {
 
    },
 })
+
+Vue.component('col2', {
+   template: `
+       <div class="col">
+           <h2>Задачи в процессе выполнения</h2>
+           <li class="cards" v-for="card in column2">
+               <a @click="card.editB = true">Редактировать</a> <br>
+               <p class="card-title">{{card.title}}</p>
+               <ul>
+                   <li class="tasks">Описание: {{card.description}}</li>
+                   <li class="tasks">Дата создания:
+                   {{ card.date }}</li>
+                   <li class="tasks">Дедлайн: {{card.deadline}}</li>
+                   <li class="tasks" v-if="card.reason != null">Причина переноса: {{ card.reason }}</li>
+                   <li class="tasks" v-if="card.edit != null">Последнее изменение: {{ card.edit}}</li>
+                   <li class="tasks" v-if="card.editB">
+                       <form @submit.prevent="updateTask(card)">
+                           <p>Новый заголовок: 
+                               <input type="text" v-model="card.title" maxlength="30" placeholder="Заголовок">
+                           </p>
+                           <p>Новое описание: 
+                               <textarea v-model="card.description" cols="20" rows="5"></textarea>
+                           </p>
+                           <p>
+                               <input type="submit" value="Редактировать">
+                           </p>
+                       </form>
+                   </li>
+               </ul>
+               <a @click="nextcol(card)">Следующая колонка</a>
+           </li>
+       </div>
+   `,
+   props: {
+       column2: {
+           type: Array,
+       },
+       card: {
+           type: Object
+       }
+   },
+   methods: {
+       nextcol(card) {
+           this.column2.splice(this.column2.indexOf(card), 1)
+           eventBus.$emit('addColumn3', card)
+       },
+       updateTask(card){
+           card.edit = new Date().toLocaleString()
+           card.editB = false
+           this.column2.push(card)
+           this.column2.splice(this.column2.indexOf(card), 1)
+       }
+   }
+})
