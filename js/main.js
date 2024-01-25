@@ -233,3 +233,38 @@ Vue.component('col3', {
        }
    }
 })
+
+Vue.component('col4', {
+   template: `
+       <div class="col">
+           <h2>Завершенные задачи</h2>
+           <div class="cards" v-for="card in column4">
+               <p class="card-title">{{card.title}}</p>
+               <ul>
+                   <li class="tasks">Описание: {{card.description}}</li>
+                   <li class="tasks">Дата создания:
+                   {{ card.date }}</li>
+                   <li class="tasks">Дедлайн: {{card.deadline}}</li>
+                   
+                   <li class="tasks" v-if="card.current"> Завершено вовремя</li>
+                   <li class="tasks" v-else>Не завершено вовремя</li>
+               </ul>
+           </div>
+       </div>
+   `,
+   props: {
+       column4: {
+           type: Array,
+       },
+       card: {
+           type: Object
+       }
+   },
+   methods: {
+       
+   },
+
+   computed:  {
+       
+   },
+})
